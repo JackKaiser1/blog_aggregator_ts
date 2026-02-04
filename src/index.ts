@@ -1,5 +1,10 @@
+import {setUser, readConfig} from "./config";
+
 function main() {
-    console.log("Hello, world!");
+    setUser("Jack");
+    const configFile = readConfig();
+    if (configFile) console.log(configFile);    
+    else console.log("cannot read file");
 }
 
 main();
