@@ -25,7 +25,7 @@ function writeConfig(config: Config): void {
     const filePath = getConfigFilePath();
     const convertedConfig = {
         db_url: config.dbUrl,
-        curent_user_name: config.currentUserName,
+        current_user_name: config.currentUserName,
     }
     const configStr = JSON.stringify(convertedConfig);
     fs.writeFileSync(filePath, configStr, {encoding: "utf-8"});
@@ -42,7 +42,7 @@ function validateConfig(rawConfig: any): Config {
     if (!rawConfig.db_url || typeof rawConfig.db_url !== "string") {
         throw new Error("db_url is required");
     }
-    if (!rawConfig.curent_user_name || typeof rawConfig.curent_user_name !== "string") {
+    if (!rawConfig.current_user_name || typeof rawConfig.current_user_name !== "string") {
         throw new Error("current_user_name is required");
     }
 
