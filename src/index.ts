@@ -2,12 +2,14 @@ import { setUser, readConfig } from "./config";
 import { type CommandsRegistry, registerCommand, runCommand} from "./command_registry";
 import { handlerLogin } from "./handler_login";
 import { handlerRegister } from "./handler_register";
+import { handlerReset } from "./handler_reset";
 import { argv } from "node:process";
 
 async function main() {
     const registry: CommandsRegistry = {};
     registerCommand(registry, "login", handlerLogin);
-    registerCommand(registry, "register", handlerRegister)
+    registerCommand(registry, "register", handlerRegister);
+    registerCommand(registry, "reset", handlerReset);
     const userArgs = process.argv.slice(2);
     if (!userArgs.length) {
         console.log("No command found");
