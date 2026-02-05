@@ -1,5 +1,5 @@
 
-type CommandHandler = (cmd: string, ...args: string[]) => void;
+type CommandHandler = (cmd: string, ...args: string[]) => Promise<void>;
 
 export type CommandsRegistry = {
     [key: string]: CommandHandler;
@@ -9,11 +9,11 @@ export function registerCommand(registry: CommandsRegistry, cmdName: string, han
     registry[cmdName] = handler;
 }
 
-export function runCommand(registry: CommandsRegistry, cmdName: string, ...args: string[]) {
+export async function runCommand(registry: CommandsRegistry, cmdName: string, ...args: string[]) {
     try {
         if (registry[cmdName]) {
             const handler = registry[cmdName];
-            handler(cmdName, ...args);
+            await handler(cmdName, ...args);
         }   
     } catch (err) {
         if (err instanceof Error) {

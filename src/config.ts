@@ -15,7 +15,7 @@ function getConfigFilePath(): string {
 
 export function setUser(userName: string) {
     const configObj: Config = {
-        dbUrl: "postgres://example",
+        dbUrl: "postgres://postgres:postgres@localhost:5432/gator?sslmode=disable",
         currentUserName: userName,
     }
     writeConfig(configObj);
@@ -31,23 +31,24 @@ function writeConfig(config: Config): void {
     fs.writeFileSync(filePath, configStr, {encoding: "utf-8"});
 }
 
-export function readConfig(): Config | undefined {
+export function readConfig(): Config {
     const filePath = getConfigFilePath();
     const configFile = fs.readFileSync(filePath, {encoding: "utf-8"});
     const rawConfig = JSON.parse(configFile);
-    const validConfig = validateConfig(rawConfig);
-    if (validConfig) return validConfig;
-
-    return undefined;
+    return validateConfig(rawConfig);    
 }
 
-function validateConfig(rawConfig: any): Config | undefined {
-    if (rawConfig.db_url && rawConfig.curent_user_name) {
-        return {
-            dbUrl: rawConfig.db_url,
-            currentUserName: rawConfig.curent_user_name
-        }
+function validateConfig(rawConfig: any): Config {
+    if (!rawConfig.db_url || typeof rawConfig.db_url !== "string") {
+        throw new Error("db_url is required");
     }
-    return undefined;
+    if (!rawConfig.curent_user_name || typeof rawConfig.curent_user_name !== "string") {
+        throw new Error("current_user_name is required");
+    }
+
+    return {
+        dbUrl: rawConfig.db_url,
+        currentUserName: rawConfig.current_user_name,
+    }
 }
 
