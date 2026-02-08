@@ -19,8 +19,7 @@ export async function getUser(name: string) {
 }
 
 export async function resetUser() {
-    await db
-            .execute(sql`TRUNCATE users;`);
+    await db.delete(users);
 }
 
 export async function getUsers() {
@@ -29,3 +28,13 @@ export async function getUsers() {
                             .from(users);
     return result;
 }
+
+export async function getUserFromId(id: string) {
+    const [result] = await db
+                            .select({name: users.name})
+                            .from(users)
+                            .where(eq(users.id, id));
+    return result;
+}
+
+export type User = typeof users.$inferSelect;

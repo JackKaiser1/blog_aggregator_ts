@@ -5,7 +5,10 @@ import { handlerRegister } from "./handler_register";
 import { handlerReset } from "./handler_reset";
 import { handlerUsers } from "./handler_users";
 import { handlerAgg } from "./handler_agg";
+import { handlerAddFeed } from "./handler_addfeed";
+import { handlerFeeds } from "./handler_feeds";
 import { argv } from "node:process";
+import { feeds } from "./lib/db/schema";
 
 async function main() {
     const registry: CommandsRegistry = {};
@@ -14,6 +17,8 @@ async function main() {
     registerCommand(registry, "reset", handlerReset);
     registerCommand(registry, "users", handlerUsers);
     registerCommand(registry, "agg", handlerAgg);
+    registerCommand(registry, "addfeed", handlerAddFeed);
+    registerCommand(registry, "feeds", handlerFeeds);
     const userArgs = process.argv.slice(2);
     if (!userArgs.length) {
         console.log("No command found");
@@ -22,6 +27,7 @@ async function main() {
 
     const cmd = userArgs[0];
     const args = userArgs.slice(1);
+
     
     if (!registry[cmd]) {
         console.log("Invalid command");
