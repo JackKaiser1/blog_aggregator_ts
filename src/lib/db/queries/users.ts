@@ -37,4 +37,12 @@ export async function getUserFromId(id: string) {
     return result;
 }
 
+export async function getUserIdFromName(name: string) {
+    const [result] = await db
+                            .select({ id: users.id} )
+                            .from(users)
+                            .where(eq(users.name, name));
+    return result;
+}
+
 export type User = typeof users.$inferSelect;

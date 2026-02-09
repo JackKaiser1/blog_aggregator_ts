@@ -3,6 +3,7 @@ import { getUser, type User } from "./lib/db/queries/users";
 import { readConfig } from "./config";
 import { users } from "./lib/db/schema";
 import { get } from "node:http";
+import { createFeedFollow } from "./lib/db/queries/feed_follows";
 
 export async function handlerAddFeed(cmd: string, ...args: string[]) {
     if (args.length < 2) throw new Error("addfeed expects two arguments");
@@ -19,6 +20,8 @@ export async function handlerAddFeed(cmd: string, ...args: string[]) {
     const userId = user.id;
 
     const feed = await createFeed(name, url, userId);
+    const feedFollow = await createFeedFollow(userId, feed.id);
+
     printFeed(feed, user);
 } 
 

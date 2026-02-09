@@ -9,6 +9,8 @@ import { handlerAddFeed } from "./handler_addfeed";
 import { handlerFeeds } from "./handler_feeds";
 import { argv } from "node:process";
 import { feeds } from "./lib/db/schema";
+import { handlerFollow } from "./handler_follow";
+import { handlerFollowing } from "./handler_following";
 
 async function main() {
     const registry: CommandsRegistry = {};
@@ -19,6 +21,8 @@ async function main() {
     registerCommand(registry, "agg", handlerAgg);
     registerCommand(registry, "addfeed", handlerAddFeed);
     registerCommand(registry, "feeds", handlerFeeds);
+    registerCommand(registry, "follow", handlerFollow);
+    registerCommand(registry, "following", handlerFollowing)
     const userArgs = process.argv.slice(2);
     if (!userArgs.length) {
         console.log("No command found");

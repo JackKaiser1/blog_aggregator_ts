@@ -15,6 +15,13 @@
       "when": 1770561333025,
       "tag": "0001_handy_shatterstar",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1770651993679,
+      "tag": "0002_violet_gateway",
+      "breakpoints": true
     }
   ]
 }
