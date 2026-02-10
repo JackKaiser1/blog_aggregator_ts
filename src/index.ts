@@ -22,7 +22,7 @@ async function main() {
     registerCommand(registry, "addfeed", handlerAddFeed);
     registerCommand(registry, "feeds", handlerFeeds);
     registerCommand(registry, "follow", handlerFollow);
-    registerCommand(registry, "following", handlerFollowing)
+    registerCommand(registry, "following", handlerFollowing);
     const userArgs = process.argv.slice(2);
     if (!userArgs.length) {
         console.log("No command found");
@@ -31,7 +31,6 @@ async function main() {
 
     const cmd = userArgs[0];
     const args = userArgs.slice(1);
-
     
     if (!registry[cmd]) {
         console.log("Invalid command");

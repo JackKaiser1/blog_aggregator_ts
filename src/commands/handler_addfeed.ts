@@ -6,21 +6,19 @@ import { get } from "node:http";
 import { createFeedFollow } from "../lib/db/queries/feed_follows";
 
 export async function handlerAddFeed(cmd: string, ...args: string[]) {
-    if (args.length < 2) throw new Error("addfeed expects two arguments");
+    if (args.length < 2) throw new Error(`Usage: ${cmd} <feed name> <url>`);
     const [name, url] = args;
 
     const feedCheck = await getFeed(name);
     if (feedCheck) throw new Error("The specified feed is already in the database");
 
-    const config = readConfig();
-    const currentUserame = config.currentUserName;
-    const user = await getUser(currentUserame);
+    const currentUserName = readConfig().currentUserName;
+    const user = await getUser(currentUserName);
 
-    if (!user.id) throw new Error("User does not have a name field");
-    const userId = user.id;
+    if (!user) throw new Error(`User ${currentUserName} not found`);
 
-    const feed = await createFeed(name, url, userId);
-    const feedFollow = await createFeedFollow(userId, feed.id);
+    const feed = await createFeed(name, url, user.id);
+    const feedFollow = await createFeedFollow(user.id, feed.id);
 
     printFeed(feed, user);
 } 
