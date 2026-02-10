@@ -1,16 +1,16 @@
 import { setUser, readConfig } from "./config";
 import { type CommandsRegistry, registerCommand, runCommand} from "./command_registry";
-import { handlerLogin } from "./handler_login";
-import { handlerRegister } from "./handler_register";
-import { handlerReset } from "./handler_reset";
-import { handlerUsers } from "./handler_users";
-import { handlerAgg } from "./handler_agg";
-import { handlerAddFeed } from "./handler_addfeed";
-import { handlerFeeds } from "./handler_feeds";
+import { handlerLogin } from "./commands/handler_login";
+import { handlerRegister } from "./commands/handler_register";
+import { handlerReset } from "./commands/handler_reset";
+import { handlerUsers } from "./commands/handler_users";
+import { handlerAgg } from "./commands/handler_agg";
+import { handlerAddFeed } from "./commands/handler_addfeed";
+import { handlerFeeds } from "./commands/handler_feeds";
 import { argv } from "node:process";
 import { feeds } from "./lib/db/schema";
-import { handlerFollow } from "./handler_follow";
-import { handlerFollowing } from "./handler_following";
+import { handlerFollow } from "./commands/handler_follow";
+import { handlerFollowing } from "./commands/handler_following";
 
 async function main() {
     const registry: CommandsRegistry = {};

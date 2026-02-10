@@ -1,4 +1,3 @@
-
 type CommandHandler = (cmd: string, ...args: string[]) => Promise<void>;
 
 export type CommandsRegistry = {
@@ -24,3 +23,4 @@ export async function runCommand(registry: CommandsRegistry, cmdName: string, ..
         }
     }
 }
+

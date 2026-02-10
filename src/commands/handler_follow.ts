@@ -1,7 +1,7 @@
-import { getFeedFromURL } from "./lib/db/queries/feeds";
-import { readConfig } from "./config";
-import { createFeedFollow } from "./lib/db/queries/feed_follows";
-import { getUserIdFromName } from "./lib/db/queries/users";
+import { getFeedFromURL } from "../lib/db/queries/feeds";
+import { readConfig } from "../config";
+import { createFeedFollow } from "../lib/db/queries/feed_follows";
+import { getUserIdFromName } from "../lib/db/queries/users";
 import { ConsoleLogWriter } from "drizzle-orm";
 
 export async function handlerFollow(cmd: string, ...args: string[]) {

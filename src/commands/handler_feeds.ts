@@ -1,5 +1,5 @@
-import { getFeeds } from "./lib/db/queries/feeds";
-import { getUserFromId } from "./lib/db/queries/users";
+import { getFeeds } from "../lib/db/queries/feeds";
+import { getUserFromId } from "../lib/db/queries/users";
 
 export async function handlerFeeds(cmd: string, ...args: string[]) {
     if (args.length) throw new Error("feeds does not take any arguments");
