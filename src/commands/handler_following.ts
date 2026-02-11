@@ -5,7 +5,12 @@ import { readConfig } from "../config";
 export async function handlerFollowing(cmd: string, user: User, ...args: string[]) {
     const feedFollows = await getFeedFollowsForUser(user.id);
     
-    for (const feed of feedFollows) {
-        console.log(feed.feedName);
+    if (feedFollows.length) {
+        for (const feed of feedFollows) {
+            console.log(feed.feedName);
+        }
+
+    } else {
+        console.log(`User ${user.name} is not following any feeds`);
     }
 }

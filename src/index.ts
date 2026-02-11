@@ -11,6 +11,7 @@ import { argv } from "node:process";
 import { feeds } from "./lib/db/schema";
 import { handlerFollow } from "./commands/handler_follow";
 import { handlerFollowing } from "./commands/handler_following";
+import { handlerUnfollow } from "./commands/handler_unfollow";
 
 async function main() {
     const userArgs = process.argv.slice(2);
@@ -30,10 +31,11 @@ async function main() {
     registerCommand(registry, "users", handlerUsers);
     registerCommand(registry, "agg", handlerAgg);
     registerCommand(registry, "feeds", handlerFeeds);
-    
+
     registerCommand(registry, "addfeed", middlewareLoggedIn(handlerAddFeed));
     registerCommand(registry, "follow", middlewareLoggedIn(handlerFollow));
     registerCommand(registry, "following", middlewareLoggedIn(handlerFollowing));
+    registerCommand(registry, "unfollow", middlewareLoggedIn(handlerUnfollow));
     
     try {
         await runCommand(registry, cmd, ...args);
