@@ -13,7 +13,17 @@ import { handlerFollow } from "./commands/handler_follow";
 import { handlerFollowing } from "./commands/handler_following";
 
 async function main() {
+    const userArgs = process.argv.slice(2);
+
+    if (!userArgs.length) {
+        console.log("No command found");
+        process.exit(1);
+    }
+
+    const cmd = userArgs[0];
+    const args = userArgs.slice(1);
     const registry: CommandsRegistry = {};
+
     registerCommand(registry, "login", handlerLogin);
     registerCommand(registry, "register", handlerRegister);
     registerCommand(registry, "reset", handlerReset);
@@ -23,22 +33,17 @@ async function main() {
     registerCommand(registry, "feeds", handlerFeeds);
     registerCommand(registry, "follow", handlerFollow);
     registerCommand(registry, "following", handlerFollowing);
-    const userArgs = process.argv.slice(2);
-    if (!userArgs.length) {
-        console.log("No command found");
-        process.exit(1);
-    }
-
-    const cmd = userArgs[0];
-    const args = userArgs.slice(1);
     
-    if (!registry[cmd]) {
-        console.log("Invalid command");
+    try {
+        await runCommand(registry, cmd, ...args);
+    } catch (err) {
+        if (err instanceof Error) {
+            console.log(`Error running command ${cmd}: ${err.message}`);
+        } else {
+            console.log(`Error running comamnd ${cmd}: ${err}`);
+        }
         process.exit(1);
     }
-
-    await runCommand(registry, cmd, ...args);
-
     process.exit(0);
 }
 

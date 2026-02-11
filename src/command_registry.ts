@@ -9,18 +9,10 @@ export function registerCommand(registry: CommandsRegistry, cmdName: string, han
 }
 
 export async function runCommand(registry: CommandsRegistry, cmdName: string, ...args: string[]) {
-    try {
-        if (registry[cmdName]) {
-            const handler = registry[cmdName];
-            await handler(cmdName, ...args);
-        }   
-    } catch (err) {
-        if (err instanceof Error) {
-            console.log(err.message);
-            process.exit(1);
-        } else {
-            console.log("Unknown error");
-        }
-    }
+    const handler = registry[cmdName]
+
+    if (!handler) throw new Error("Invalid command");
+    
+    await handler(cmdName, ...args);
 }
 
