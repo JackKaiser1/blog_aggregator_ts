@@ -1,5 +1,5 @@
 import { setUser, readConfig } from "./config";
-import { type CommandsRegistry, registerCommand, runCommand} from "./command_registry";
+import { type CommandsRegistry, registerCommand, runCommand, middlewareLoggedIn} from "./command_registry";
 import { handlerLogin } from "./commands/handler_login";
 import { handlerRegister } from "./commands/handler_register";
 import { handlerReset } from "./commands/handler_reset";
@@ -29,10 +29,11 @@ async function main() {
     registerCommand(registry, "reset", handlerReset);
     registerCommand(registry, "users", handlerUsers);
     registerCommand(registry, "agg", handlerAgg);
-    registerCommand(registry, "addfeed", handlerAddFeed);
     registerCommand(registry, "feeds", handlerFeeds);
-    registerCommand(registry, "follow", handlerFollow);
-    registerCommand(registry, "following", handlerFollowing);
+    
+    registerCommand(registry, "addfeed", middlewareLoggedIn(handlerAddFeed));
+    registerCommand(registry, "follow", middlewareLoggedIn(handlerFollow));
+    registerCommand(registry, "following", middlewareLoggedIn(handlerFollowing));
     
     try {
         await runCommand(registry, cmd, ...args);
