@@ -1,38 +1,22 @@
 import { getNextFeedToFetch, markFeedFetched } from "src/lib/db/queries/feeds";
 import { fetchFeed } from "../fetch_feed";
-import { error } from "node:console";
 
 export async function handlerAgg(cmd: string, ...args: string[]) {
-    const intervalArg = args[0];
-    if (!intervalArg) throw new Error(`Usage: ${cmd} <interval>`);
+    const durationStr = args[0];
+    if (!durationStr) throw new Error(`Usage: ${cmd} <interval>`);
 
-    const intervalReg = parseDuration(intervalArg);
-    if (!intervalReg) throw new Error("Must pass number followed by quantity of time");
-
-    let timeBetweenReqs: number;
-    if (intervalReg[2] == "ms") {
-        timeBetweenReqs = parseInt(intervalReg[1]);
-    } else if (intervalReg[2] == "s") {
-        timeBetweenReqs = parseInt(intervalReg[1]) * 1_000;
-    } else if (intervalReg[2] == "m") {
-        timeBetweenReqs = parseInt(intervalReg[1]) * 60_000;
-    } else if (intervalReg[2] == "h") {
-        timeBetweenReqs = parseInt(intervalReg[1]) * 3.6e+6;
-    } else {
-        throw new Error("Incorrect time format, use ms, s, m or h");
-    }
-
-    console.log(`Collecting feeds every ${timeBetweenReqs}`);
+    const intervalMs = parseDuration(durationStr);
+    console.log(`Collecting feeds every ${intervalMs}ms`);
 
     scrapeFeeds().catch(handleError);
 
     const interval = setInterval(() => {
         scrapeFeeds().catch(handleError);
-    }, timeBetweenReqs);
+    }, intervalMs);
 
     await new Promise<void>((resolve) => {
         process.on("SIGINT", () => {
-            console.log("Shutting down feed aggregator...");
+            console.log("\n\nShutting down feed aggregator...");
             clearInterval(interval);
             resolve();
         });
@@ -58,10 +42,34 @@ async function scrapeFeeds() {
 
 }
 
-function parseDuration(durationStr: string) {
+function parseDuration(durationStr: string): number {
     const regex = /^(\d+)(ms|s|m|h)$/;
-    const match = durationStr.match(regex);
-    return match;
+
+    const matchArray = durationStr.match(regex);
+    if (!matchArray) throw new Error(`Interval format: <number><ms | s | m | h>`);
+
+    const timeUnit = matchArray[2];
+    const intervalNum = parseInt(matchArray[1]);
+    let intervalMs: number;
+
+    switch (timeUnit) {
+        case "ms":
+            intervalMs = intervalNum;
+            break;
+        case "s":
+            intervalMs = intervalNum * 1_000;
+            break;
+        case "m": 
+            intervalMs = intervalNum * 60_000;
+            break;
+        case "h":
+            intervalMs = intervalNum * 3.6e+6;
+            break;
+        default:
+            intervalMs = 30_000;
+    }
+
+    return intervalMs;
 }
 
 function handleError(err: unknown) {
@@ -71,3 +79,5 @@ function handleError(err: unknown) {
         console.log(err);
     }
 }
+
+
