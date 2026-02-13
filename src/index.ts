@@ -12,6 +12,7 @@ import { feeds } from "./lib/db/schema";
 import { handlerFollow } from "./commands/handler_follow";
 import { handlerFollowing } from "./commands/handler_following";
 import { handlerUnfollow } from "./commands/handler_unfollow";
+import { handlerBrowse } from "./commands/handler_browse";
 
 async function main() {
     const userArgs = process.argv.slice(2);
@@ -36,6 +37,7 @@ async function main() {
     registerCommand(registry, "follow", middlewareLoggedIn(handlerFollow));
     registerCommand(registry, "following", middlewareLoggedIn(handlerFollowing));
     registerCommand(registry, "unfollow", middlewareLoggedIn(handlerUnfollow));
+    registerCommand(registry, "browse", middlewareLoggedIn(handlerBrowse));
     
     try {
         await runCommand(registry, cmd, ...args);

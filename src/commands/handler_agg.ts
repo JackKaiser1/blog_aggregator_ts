@@ -1,5 +1,6 @@
 import { getNextFeedToFetch, markFeedFetched } from "src/lib/db/queries/feeds";
 import { fetchFeed } from "../fetch_feed";
+import { createPost, getPostFromUrl } from "src/lib/db/queries/posts";
 
 export async function handlerAgg(cmd: string, ...args: string[]) {
     const durationStr = args[0];
@@ -38,8 +39,18 @@ async function scrapeFeeds() {
     console.log(`---${rssFeed.channel.title}`);
     for (const item of items) {
         console.log(item.title);
-    }
 
+        let description: string | null = null;
+        if (item.description) description = item.description;
+
+        const pubDate = new Date(item.pubDate);
+
+        const postCheck = await getPostFromUrl(item.link);
+        if (postCheck) continue;
+
+        const post = await createPost(item.title, item.link, nextFeed.id, description, pubDate);
+        // if (!post) throw new Error("Failed to fetch post")
+    }
 }
 
 function parseDuration(durationStr: string): number {
@@ -74,7 +85,7 @@ function parseDuration(durationStr: string): number {
 
 function handleError(err: unknown) {
     if (err instanceof Error) {
-        console.log(err.message);
+        console.log(err);
     } else {
         console.log(err);
     }

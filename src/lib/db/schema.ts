@@ -1,4 +1,4 @@
-import { unique } from "drizzle-orm/gel-core";
+import { integer, unique } from "drizzle-orm/gel-core";
 import { pgTable, uniqueIndex, timestamp, uuid, text } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
@@ -45,3 +45,19 @@ export const feedFollows = pgTable("feed_follows", {
         uniqueIndex("followed_feeds").on(t.userId, t.feedId),
     ]
 );
+
+export const posts = pgTable("posts", {
+    id: uuid("id").primaryKey().defaultRandom().notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at")
+                .notNull()
+                .defaultNow()
+                .$onUpdate(() => new Date()),
+    title: text("title").notNull(),
+    feedUrl: text("url").notNull().unique(),
+    description: text("description"),
+    publishedAt: timestamp("published_at").notNull(),
+    feedId: uuid("feed_id")
+                .notNull()
+                .references(() => feeds.id, { onDelete: "cascade" }),
+});
